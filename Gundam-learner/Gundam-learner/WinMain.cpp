@@ -1,48 +1,12 @@
-#include <Windows.h>
+#include "Window.h"
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	switch (msg)
-	{
-	case WM_KEYDOWN:
-		if (wParam == VK_ESCAPE)
-			PostQuitMessage(0);
-		break;
-	case WM_CLOSE:
-		PostQuitMessage(0);
-		break;
-	}
-	return DefWindowProc(hWnd, msg, wParam, lParam);
-}
-
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
-	// Register window class
-	const auto pClassName = L"hw3dbutts";
-	WNDCLASSEX wc = { 0 };
-	wc.cbSize = sizeof(wc);
-	wc.style = CS_OWNDC;
-	wc.lpfnWndProc = WndProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
-	wc.hIcon = nullptr;
-	wc.hCursor = nullptr;
-	wc.hbrBackground = nullptr;
-	wc.lpszClassName = pClassName;
-	wc.hIconSm = nullptr;
-
-	RegisterClassEx( &wc );
-
-	// Create window
-	long dwStyle = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
-	HWND hWnd = CreateWindowEx(0, pClassName, L"Demo name", dwStyle, 200, 200, 640, 480, nullptr, nullptr, hInstance, nullptr);
-	ShowWindow(hWnd, SW_SHOW);
-
-	// message pump
+	Window window(800, 300, "Titlee");
+	
 	MSG msg;
 	BOOL gResult;
-	while (gResult = GetMessage(&msg, nullptr, 0, 0) > 0)
+	while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0)
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
@@ -56,6 +20,4 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	{
 		return msg.wParam;
 	}
-
-	return 0;
 }
