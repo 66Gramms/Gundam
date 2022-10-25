@@ -12,6 +12,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			if (window.keyboard.KeyIsPressed(VK_ESCAPE))
+			{
+				PostQuitMessage(0);
+				return 0;
+			}
 		}
 
 		if (gResult == -1)
