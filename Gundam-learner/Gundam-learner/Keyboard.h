@@ -4,7 +4,6 @@
 
 class Keyboard
 {
-	friend class Window;
 public:
 	class Event
 	{
@@ -47,6 +46,7 @@ public:
 private:
 #pragma region "FriendClass"
 	//To be used by Window class
+	friend class Window;
 	void OnKeyPressed(unsigned char keycode) noexcept;
 	void OnKeyReleased(unsigned char keycode) noexcept;
 	void OnChar(char character) noexcept;
