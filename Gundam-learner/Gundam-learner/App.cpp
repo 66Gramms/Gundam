@@ -17,8 +17,8 @@ int App::Start()
 
 void App::Update()
 {
-	const float time = timer.Peek();
-	std::ostringstream oss;
-	oss << "Time elapsed: " << std::setprecision(2) << std::fixed << time << "s";
-	//window.SetTitle(oss.str());
+	if (window.keyboard.KeyIsPressed(VK_ESCAPE))
+	{
+		PostQuitMessage(0);
+	}
 }
