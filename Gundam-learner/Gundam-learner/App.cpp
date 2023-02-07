@@ -19,6 +19,6 @@ void App::Update()
 {
 	const float time = timer.Peek();
 	std::ostringstream oss;
-	oss << "Time elapsed: " << std::setprecision(1) << std::fixed << time << "s";
-	window.SetTitle(oss.str());
+	oss << "Time elapsed: " << std::setprecision(2) << std::fixed << time << "s";
+	//window.SetTitle(oss.str());
 }
