@@ -38,7 +38,7 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 #pragma endregion "WindowClass"
 
 #pragma region "Window"
-Window::Window(int width, int height, const char* name)
+Window::Window(int width, int height, const char* name) : width(width), height(height)
 {
 	RECT wr;
 	wr.left = 100;
