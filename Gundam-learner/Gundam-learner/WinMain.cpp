@@ -1,32 +1,10 @@
-#include "Window.h"
+#include "App.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	try
 	{
-		Window window(640, 480, "Titlee");
-
-		MSG msg;
-		BOOL gResult;
-		while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0)
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (window.keyboard.KeyIsPressed(VK_ESCAPE))
-			{
-				PostQuitMessage(0);
-				return 0;
-			}
-		}
-
-		if (gResult == -1)
-		{
-			return -1;
-		}
-		else
-		{
-			return msg.wParam;
-		}
+		return App().Start();
 	}
 	catch (const GundamException& e)
 	{
