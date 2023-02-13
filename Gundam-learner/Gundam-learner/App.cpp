@@ -21,4 +21,8 @@ void App::Update()
 	{
 		PostQuitMessage(0);
 	}
+
+	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
+	window.GetGfx().ClearBuffer(c, c, 1.0f);
+	window.GetGfx().EndFrame();
 }
