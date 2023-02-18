@@ -24,6 +24,7 @@
     <ProjectGuid>{8628c363-2032-4655-ab10-88ac8818e97b}</ProjectGuid>
     <RootNamespace>Gundamlearner</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Gundam</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
