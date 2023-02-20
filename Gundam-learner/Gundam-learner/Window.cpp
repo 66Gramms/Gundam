@@ -149,7 +149,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_MOUSEMOVE:
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
-		const bool mouseInWindow = pt.x >= 0 && pt.x < width&& pt.y >= 0 && pt.y < height;
+		const bool mouseInWindow = pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height;
 		if (mouseInWindow)
 		{
 			mouse.OnMouseMove(pt.x, pt.y);
