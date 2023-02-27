@@ -1,5 +1,7 @@
 #include "Graphics.h"
 
+namespace wrl = Microsoft::WRL;
+
 #pragma comment(lib, "d3d11.lib")
 
 Graphics::Graphics(HWND hWnd)
@@ -37,30 +39,9 @@ Graphics::Graphics(HWND hWnd)
 		&pContext
 	);
 
-	ID3D11Resource* pBackBuffer = nullptr;
-	pSwap->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer));
-	pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &pTarget);
-	pBackBuffer->Release();
-}
-
-Graphics::~Graphics()
-{
-	if (pTarget)
-	{
-		pTarget->Release();
-	}
-	if (pContext)
-	{
-		pContext->Release();
-	}
-	if (pSwap)
-	{
-		pSwap->Release();
-	}
-	if (pDevice)
-	{
-		pDevice->Release();
-	}
+	wrl::ComPtr<ID3D11Resource> pBackBuffer = nullptr;
+	pSwap->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer);
+	pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget);
 }
 
 void Graphics::EndFrame()
@@ -71,5 +52,5 @@ void Graphics::EndFrame()
 void Graphics::ClearBuffer(float red, float green, float blue) noexcept
 {
 	const float color[] = { red, green, blue, 1.0f };
-	pContext->ClearRenderTargetView(pTarget, color);
+	pContext->ClearRenderTargetView(pTarget.Get(), color);
 }
