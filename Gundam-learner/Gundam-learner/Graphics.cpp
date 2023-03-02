@@ -54,3 +54,40 @@ void Graphics::ClearBuffer(float red, float green, float blue) noexcept
 	const float color[] = { red, green, blue, 1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);
 }
+
+void Graphics::DrawTestTriangle()
+{
+	namespace wrl = Microsoft::WRL;
+	HRESULT hr;
+
+	struct Vertex
+	{
+		float x;
+		float y;
+	};
+
+	const Vertex vertices[] =
+	{
+		{0.0f, 0.5f},
+		{0.5f, -0.5f},
+		{-0.5f, -0.5f},
+	};
+
+	const UINT stride = sizeof(Vertex);
+	const UINT offset = 0;
+
+	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
+	D3D11_BUFFER_DESC bd = {};
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = 0;
+	bd.ByteWidth = sizeof(vertices);
+	bd.StructureByteStride = stride;
+	D3D11_SUBRESOURCE_DATA sd = {};
+	sd.pSysMem = vertices;
+
+	hr = pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer);
+	pContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
+	pContext->Draw(3, 0);
+}
