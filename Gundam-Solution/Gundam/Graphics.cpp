@@ -1,4 +1,5 @@
 #include "Graphics.h"
+#include <array>
 #include <d3dcompiler.h>
 
 namespace wrl = Microsoft::WRL;
@@ -77,6 +78,7 @@ void Graphics::DrawTestTriangle()
 	const UINT stride = sizeof(Vertex);
 	const UINT offset = 0;
 
+	// Create vertex buffer
 	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
 	D3D11_BUFFER_DESC bd = {};
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -88,7 +90,18 @@ void Graphics::DrawTestTriangle()
 	D3D11_SUBRESOURCE_DATA sd = {};
 	sd.pSysMem = vertices;
 
+	// Bind vertex buffer
 	pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer);
 	pContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
-	pContext->Draw(3, 0);
+
+	// Create vertex shader
+	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
+	wrl::ComPtr<ID3DBlob> pBlob;
+	D3DReadFileToBlob(L"shaders\\VertexShader.cso", &pBlob);
+	pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
+
+	// Bind vertex shader
+	pContext->VSSetShader(pVertexShader.Get(), nullptr, 0);
+	 
+	pContext->Draw((UINT)std::size(vertices), 0);
 }
