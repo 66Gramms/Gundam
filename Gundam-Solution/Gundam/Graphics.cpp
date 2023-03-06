@@ -1,8 +1,10 @@
 #include "Graphics.h"
+#include <d3dcompiler.h>
 
 namespace wrl = Microsoft::WRL;
 
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "D3DCompiler.lib")
 
 Graphics::Graphics(HWND hWnd)
 {
@@ -58,7 +60,6 @@ void Graphics::ClearBuffer(float red, float green, float blue) noexcept
 void Graphics::DrawTestTriangle()
 {
 	namespace wrl = Microsoft::WRL;
-	HRESULT hr;
 
 	struct Vertex
 	{
@@ -87,7 +88,7 @@ void Graphics::DrawTestTriangle()
 	D3D11_SUBRESOURCE_DATA sd = {};
 	sd.pSysMem = vertices;
 
-	hr = pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer);
+	pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer);
 	pContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 	pContext->Draw(3, 0);
 }

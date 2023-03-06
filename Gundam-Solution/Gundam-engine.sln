@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32802.440
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gundam-learner", "Gundam-learner\Gundam-learner.vcxproj", "{8628C363-2032-4655-AB10-88AC8818E97B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gundam", "Gundam\Gundam.vcxproj", "{8628C363-2032-4655-AB10-88AC8818E97B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

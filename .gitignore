@@ -348,4 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-Gundam-learner/int/
+Gundam-Solution/int/
+Gundam-Solution/Gundam/shaders/
