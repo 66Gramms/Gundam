@@ -1,5 +1,6 @@
 #include "Graphics.h"
 #include <array>
+#include <cmath>
 #include <d3dcompiler.h>
 
 namespace wrl = Microsoft::WRL;
@@ -58,7 +59,7 @@ void Graphics::ClearBuffer(float red, float green, float blue) noexcept
 	pContext->ClearRenderTargetView(pTarget.Get(), color);
 }
 
-void Graphics::DrawTestTriangle()
+void Graphics::DrawTestTriangle(float angle)
 {
 	namespace wrl = Microsoft::WRL;
 
@@ -77,7 +78,6 @@ void Graphics::DrawTestTriangle()
 			unsigned char a;
 		} color;
 	};
-
 
 	// Create vertex buffer
 	const Vertex vertices[] =
@@ -128,6 +128,38 @@ void Graphics::DrawTestTriangle()
 
 	// Bind index buffer
 	pContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+	// Create constant buffer (for transformation matrix)
+	struct ConstantBuffer
+	{
+		struct
+		{
+			float element[4][4];
+		} transformation;
+	};
+	const ConstantBuffer cb =
+	{
+		{
+			(3.0f / 4.0f) * std::cos(angle),	std::sin(angle),	0.0f,	0.0f,
+			(3.0f / 4.0f) * -std::sin(angle),	std::cos(angle),	0.0f,	0.0f,
+			0.0f,								0.0f,				1.0f,	0.0f,
+			0.0f,								0.0f,				0.0f,	1.0f,
+		}
+	};
+	wrl::ComPtr<ID3D11Buffer> pConstantBuffer;
+	D3D11_BUFFER_DESC cbd = {};
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.MiscFlags = 0;
+	cbd.ByteWidth = sizeof(cb);
+	cbd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA csd = {};
+	csd.pSysMem = &cb;
+	pDevice->CreateBuffer(&cbd, &csd, &pConstantBuffer);
+
+	// Bind constant buffer
+	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
 
 	// Create pixel shader
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
