@@ -85,6 +85,9 @@ void Graphics::DrawTestTriangle()
 		{0.0f, 0.5f, 255, 0, 0, 0},
 		{0.5f, -0.5f, 0, 255, 0.0f, 0},
 		{-0.5f, -0.5f, 0, 0, 255, 0},
+		{-0.3f, 0.3f, 0, 255, 0, 0},
+		{0.3f, 0.3f, 0, 0, 255, 0},
+		{0.0f, -0.8f, 255, 0, 0, 0},
 	};
 	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
 	D3D11_BUFFER_DESC bd = {};
@@ -107,6 +110,9 @@ void Graphics::DrawTestTriangle()
 	const unsigned short indices[] =
 	{
 		0, 1, 2,
+		0, 2, 3,
+		0, 4, 1,
+		2, 1, 5,
 	};
 	wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
 	D3D11_BUFFER_DESC ibd = {};
