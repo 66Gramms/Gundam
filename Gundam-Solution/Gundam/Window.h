@@ -55,8 +55,10 @@ private:
 	static LRESULT WINAPI HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
-	int width;
-	int height;
+	int windowWidth;
+	int windowHeight;
+	int screenWidth;
+	int screenHeight;
 	HWND hWnd;
 	std::unique_ptr<Graphics> pGfx;
 };

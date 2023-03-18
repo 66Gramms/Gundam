@@ -38,7 +38,7 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 #pragma endregion "WindowClass"
 
 #pragma region "Window"
-Window::Window(int width, int height, const char* name) : width(width), height(height)
+Window::Window(int width, int height, const char* name) : windowWidth(width), windowHeight(height)
 {
 	RECT wr;
 	wr.left = 100;
@@ -50,9 +50,19 @@ Window::Window(int width, int height, const char* name) : width(width), height(h
 		throw CHWND_LAST_EXCEPT();
 	}
 
+	screenWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	screenHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+#if FULLSCREEN
+	ChangeDisplaySettings(nullptr, CDS_FULLSCREEN);
+	ShowCursor(FALSE);
+	hWnd = CreateWindow(WindowClass::GetName(), name, WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, screenWidth, screenHeight,
+		nullptr, nullptr, WindowClass::GetInstance(), this);
+#else
 	hWnd = CreateWindow(WindowClass::GetName(), name, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this);
+#endif
 
 	if (hWnd == nullptr)
 	{
@@ -149,7 +159,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_MOUSEMOVE:
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
-		const bool mouseInWindow = pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height;
+		const bool mouseInWindow = pt.x >= 0 && pt.x < windowWidth && pt.y >= 0 && pt.y < windowHeight;
 		if (mouseInWindow)
 		{
 			mouse.OnMouseMove(pt.x, pt.y);
