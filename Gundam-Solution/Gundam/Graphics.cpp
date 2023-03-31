@@ -1,5 +1,5 @@
 #include "Graphics.h"
-#include <array>
+#include "Model.h"
 #include <cmath>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -7,7 +7,6 @@
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
 
-#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
 
 Graphics::Graphics(HWND hWnd)
@@ -101,69 +100,16 @@ void Graphics::DrawTestTriangle(float angle, float x, float z)
 {
 	namespace wrl = Microsoft::WRL;
 
-	struct Vertex
-	{
-		struct
-		{
-			float x;
-			float y;
-			float z;
-		} pos;
-	};
-
-	// Create vertex buffer
-	const Vertex vertices[] =
-	{
-		{-1.0f, -1.0f, -1.0f},
-		{ 1.0f, -1.0f, -1.0f},
-		{-1.0f,  1.0f, -1.0f},
-		{ 1.0f,  1.0f, -1.0f},
-		{-1.0f, -1.0f,  1.0f},
-		{ 1.0f, -1.0f,  1.0f},
-		{-1.0f,  1.0f,  1.0f},
-		{ 1.0f,  1.0f,  1.0f},
-	};
-	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
-	D3D11_BUFFER_DESC bd = {};
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = 0;
-	bd.ByteWidth = sizeof(vertices);
-	bd.StructureByteStride = sizeof(Vertex);
-	D3D11_SUBRESOURCE_DATA sd = {};
-	sd.pSysMem = vertices;
-	pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer);
+	auto* mesh = new Model();
+	auto kocka = mesh->CreateCube(pDevice.Get());
 
 	// Bind vertex buffer
-	const UINT stride = sizeof(Vertex);
+	const UINT stride = sizeof(Model::Vertex);
 	const UINT offset = 0;
-	pContext->IASetVertexBuffers(0, 1, pVertexBuffer.GetAddressOf(), &stride, &offset);
-
-	// Create index buffer
-	const unsigned short indices[] =
-	{
-		0, 2, 1,  2, 3, 1,
-		1, 3, 5,  3, 7, 5,
-		2, 6, 3,  3, 6, 7,
-		4, 5, 7,  4, 7, 6,
-		0, 4, 2,  2, 4, 6,
-		0, 1, 4,  1, 5, 4
-	};
-	wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
-	D3D11_BUFFER_DESC ibd = {};
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.Usage = D3D11_USAGE_DEFAULT;
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-	ibd.ByteWidth = sizeof(indices);
-	ibd.StructureByteStride = sizeof(unsigned short);
-	D3D11_SUBRESOURCE_DATA isd = {};
-	isd.pSysMem = indices;
-	pDevice->CreateBuffer(&ibd, &isd, &pIndexBuffer);
+	pContext->IASetVertexBuffers(0, 1, kocka.pVertexBuffer.GetAddressOf(), &stride, &offset);
 
 	// Bind index buffer
-	pContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+	pContext->IASetIndexBuffer(kocka.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 	// Create constant buffer (for transformation matrix)
 	struct ConstantBuffer
@@ -253,11 +199,11 @@ void Graphics::DrawTestTriangle(float angle, float x, float z)
 
 	// Input (vertex) layout
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
-	const D3D11_INPUT_ELEMENT_DESC ied[] =
+	const D3D11_INPUT_ELEMENT_DESC inputElementDescriptor[] =
 	{
 		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
-	pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
+	pDevice->CreateInputLayout(inputElementDescriptor, (UINT)std::size(inputElementDescriptor), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
 
 	// Bind input layout
 	pContext->IASetInputLayout(pInputLayout.Get());
@@ -275,5 +221,5 @@ void Graphics::DrawTestTriangle(float angle, float x, float z)
 	vp.TopLeftY = 0;
 	pContext->RSSetViewports(1, &vp);
 	 
-	pContext->DrawIndexed((UINT)std::size(indices), 0, 0);
+	pContext->DrawIndexed((UINT)kocka.IndexCount, 0, 0);
 }
