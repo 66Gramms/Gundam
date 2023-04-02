@@ -1,6 +1,4 @@
 #include "Model.h"
-#include <d3dcompiler.h>
-#include <tuple>
 
 Model::Mesh Model::CreatePyramid(ID3D11Device* pDevice)
 {
@@ -49,12 +47,6 @@ Model::Mesh Model::CreatePyramid(ID3D11Device* pDevice)
 	D3D11_SUBRESOURCE_DATA isd = {};
 	isd.pSysMem = indices;
 	pDevice->CreateBuffer(&ibd, &isd, &mesh.pIndexBuffer);
-
-	material->CreatePixelShader("shaders\\PixelShader.cso", pDevice);
-	material->CreateVertexShader("shaders\\VertexShader.cso", pDevice);
-	this->pPixelShader = material->pPixelShader;
-	this->pVertexShader = material->pVertexShader;
-	this->pInputLayout = material->pInputLayout;
 
 	return mesh;
 }
@@ -110,11 +102,14 @@ Model::Mesh Model::CreateCube(ID3D11Device* pDevice)
 	isd.pSysMem = indices;
 	pDevice->CreateBuffer(&ibd, &isd, &mesh.pIndexBuffer);
 
+	return mesh;
+}
+
+void Model::SetShaders(ID3D11Device* pDevice)
+{
 	material->CreatePixelShader("shaders\\PixelShader.cso", pDevice);
 	material->CreateVertexShader("shaders\\VertexShader.cso", pDevice);
 	this->pPixelShader = material->pPixelShader;
 	this->pVertexShader = material->pVertexShader;
 	this->pInputLayout = material->pInputLayout;
-
-	return mesh;
 }

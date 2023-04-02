@@ -32,6 +32,8 @@ public:
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
 
-	Mesh CreateCube(ID3D11Device* pDevice);
-	Mesh CreatePyramid(ID3D11Device* pDevice);
+	static Mesh CreateCube(ID3D11Device* pDevice);
+	static Mesh CreatePyramid(ID3D11Device* pDevice);
+
+	void SetShaders(ID3D11Device* pDevice);
 };

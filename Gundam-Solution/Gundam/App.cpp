@@ -8,11 +8,13 @@ int App::Start()
 	pDevice = window.GetGfx().GetPDevice().Get();
 
 	Model* cube = new Model();
-	cube->mesh = cube->CreateCube(pDevice);
+	cube->mesh = Model::CreateCube(pDevice);
+	cube->SetShaders(pDevice);
 	models.push_back(cube);
 
 	Model* pyramid = new Model();
-	pyramid->mesh = pyramid->CreatePyramid(pDevice);
+	pyramid->mesh = Model::CreatePyramid(pDevice);
+	pyramid->SetShaders(pDevice);
 	models.push_back(pyramid);
 
 	while (true)
