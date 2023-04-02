@@ -33,4 +33,5 @@ public:
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
 
 	Mesh CreateCube(ID3D11Device* pDevice);
+	Mesh CreatePyramid(ID3D11Device* pDevice);
 };
