@@ -82,6 +82,19 @@ Graphics::Graphics(HWND hWnd)
 
 	// Bind depth stencil view to OM
 	pContext->OMSetRenderTargets(1, pTarget.GetAddressOf(), pDSV.Get());
+
+	// Configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = 800;
+	vp.Height = 600;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	pContext->RSSetViewports(1, &vp);
+
+	// Set primitive topology to triangle list (groups of 3 vertices)
+	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Graphics::EndFrame()
@@ -96,20 +109,23 @@ void Graphics::ClearBuffer(float red, float green, float blue) noexcept
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Graphics::DrawTestTriangle(float angle, float x, float z)
+void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 {
 	namespace wrl = Microsoft::WRL;
-
-	auto* mesh = new Model();
-	auto kocka = mesh->CreateCube(pDevice.Get());
 
 	// Bind vertex buffer
 	const UINT stride = sizeof(Model::Vertex);
 	const UINT offset = 0;
-	pContext->IASetVertexBuffers(0, 1, kocka.pVertexBuffer.GetAddressOf(), &stride, &offset);
+	pContext->IASetVertexBuffers(0, 1, model->mesh.pVertexBuffer.GetAddressOf(), &stride, &offset);
 
 	// Bind index buffer
-	pContext->IASetIndexBuffer(kocka.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+	pContext->IASetIndexBuffer(model->mesh.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+	// Bind pixel shader
+	pContext->PSSetShader(model->pPixelShader.Get(), nullptr, 0);
+
+	// Bind vertex shader
+	pContext->VSSetShader(model->pVertexShader.Get(), nullptr, 0);
 
 	// Create constant buffer (for transformation matrix)
 	struct ConstantBuffer
@@ -180,46 +196,8 @@ void Graphics::DrawTestTriangle(float angle, float x, float z)
 	// Bind constant buffer 2
 	pContext->PSSetConstantBuffers(0, 1, pConstantBuffer2.GetAddressOf());
 
-	// Create pixel shader
-	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
-	wrl::ComPtr<ID3DBlob> pBlob;
-	D3DReadFileToBlob(L"shaders\\PixelShader.cso", &pBlob);
-	pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
-
-	// Bind pixel shader
-	pContext->PSSetShader(pPixelShader.Get(), nullptr, 0);
-
-	// Create vertex shader
-	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	D3DReadFileToBlob(L"shaders\\VertexShader.cso", &pBlob);
-	pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
-
-	// Bind vertex shader
-	pContext->VSSetShader(pVertexShader.Get(), nullptr, 0);
-
-	// Input (vertex) layout
-	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
-	const D3D11_INPUT_ELEMENT_DESC inputElementDescriptor[] =
-	{
-		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-	pDevice->CreateInputLayout(inputElementDescriptor, (UINT)std::size(inputElementDescriptor), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
-
 	// Bind input layout
-	pContext->IASetInputLayout(pInputLayout.Get());
+	pContext->IASetInputLayout(model->pInputLayout.Get());
 
-	// Set primitive topology to triangle list (groups of 3 vertices)
-	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// Configure viewport
-	D3D11_VIEWPORT vp;
-	vp.Width = 800;
-	vp.Height = 600;
-	vp.MinDepth = 0;
-	vp.MaxDepth = 1;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	pContext->RSSetViewports(1, &vp);
-	 
-	pContext->DrawIndexed((UINT)kocka.IndexCount, 0, 0);
+	pContext->DrawIndexed((UINT)model->mesh.IndexCount, 0, 0);
 }

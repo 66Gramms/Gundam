@@ -18,12 +18,16 @@ public:
 		} pos;
 	};
 
-	typedef struct Mesh
+	struct Mesh
 	{
 		wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
 		wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
 		size_t IndexCount;
-	};
+	} mesh;
+
+	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
+	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
+	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
 
 	Mesh CreateCube(ID3D11Device* pDevice);
 };

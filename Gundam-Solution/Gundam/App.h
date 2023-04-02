@@ -12,4 +12,7 @@ private:
 
 	Window window;
 	GundamTimer timer;
+
+	class ID3D11Device* pDevice;
+	std::vector<class Model*> models;
 };
