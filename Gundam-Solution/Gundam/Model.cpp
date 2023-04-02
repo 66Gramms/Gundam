@@ -1,5 +1,6 @@
 #include "Model.h"
 #include <d3dcompiler.h>
+#include <tuple>
 
 Model::Mesh Model::CreateCube(ID3D11Device* pDevice)
 {
@@ -52,27 +53,11 @@ Model::Mesh Model::CreateCube(ID3D11Device* pDevice)
 	isd.pSysMem = indices;
 	pDevice->CreateBuffer(&ibd, &isd, &mesh.pIndexBuffer);
 
-	// Create pixel shader
-	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
-	wrl::ComPtr<ID3DBlob> pBlob;
-	D3DReadFileToBlob(L"shaders\\PixelShader.cso", &pBlob);
-	pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
-	this->pPixelShader = pPixelShader;
-
-	// Create vertex shader
-	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	D3DReadFileToBlob(L"shaders\\VertexShader.cso", &pBlob);
-	pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
-	this->pVertexShader = pVertexShader;
-
-	// Input (vertex) layout
-	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
-	const D3D11_INPUT_ELEMENT_DESC inputElementDescriptor[] =
-	{
-		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-	pDevice->CreateInputLayout(inputElementDescriptor, (UINT)std::size(inputElementDescriptor), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
-	this->pInputLayout = pInputLayout;
+	material->CreatePixelShader("shaders\\PixelShader.cso", pDevice);
+	material->CreateVertexShader("shaders\\VertexShader.cso", pDevice);
+	this->pPixelShader = material->pPixelShader;
+	this->pVertexShader = material->pVertexShader;
+	this->pInputLayout = material->pInputLayout;
 
 	return mesh;
 }

@@ -169,6 +169,7 @@
     <ClCompile Include="GundamException.cpp" />
     <ClCompile Include="GundamTimer.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="GundamTimer.h" />
     <ClInclude Include="GundamWin.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Window.h" />

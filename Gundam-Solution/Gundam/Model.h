@@ -1,4 +1,5 @@
 #pragma once
+#include "Material.h"
 #include <wrl.h>
 #include <d3d11.h>
 #include <array>
@@ -24,6 +25,8 @@ public:
 		wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
 		size_t IndexCount;
 	} mesh;
+
+	Material* material = new Material();
 
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
