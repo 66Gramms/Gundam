@@ -1,5 +1,6 @@
 #include "Graphics.h"
 #include "Model.h"
+#include "Material.h"
 #include <cmath>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -122,10 +123,10 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	pContext->IASetIndexBuffer(model->mesh.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 	// Bind pixel shader
-	pContext->PSSetShader(model->material->GetPixelShader().Get(), nullptr, 0);
+	pContext->PSSetShader(model->material->pPixelShader.Get(), nullptr, 0);
 
 	// Bind vertex shader
-	pContext->VSSetShader(model->material->GetVertexShader().Get(), nullptr, 0);
+	pContext->VSSetShader(model->material->pVertexShader.Get(), nullptr, 0);
 
 	// Create constant buffer (for transformation matrix)
 	struct ConstantBuffer
@@ -197,7 +198,7 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	pContext->PSSetConstantBuffers(0, 1, pConstantBuffer2.GetAddressOf());
 
 	// Bind input layout
-	pContext->IASetInputLayout(model->material->GetInputLayout().Get());
+	pContext->IASetInputLayout(model->material->pInputLayout.Get());
 
 	pContext->DrawIndexed((UINT)model->mesh.IndexCount, 0, 0);
 }

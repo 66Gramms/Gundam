@@ -1,5 +1,6 @@
 #include "App.h"
 #include "Model.h"
+#include "CubeMaterial.h"
 
 App::App() : window(800, 600, "Title") {}
 
@@ -7,8 +8,7 @@ int App::Start()
 {
 	pDevice = window.GetGfx().GetPDevice().Get();
 
-	Material* defaultMaterial = new Material();
-	defaultMaterial->SetShaders(pDevice);
+	CubeMaterial* defaultMaterial = new CubeMaterial("shaders\\PixelShader.cso", "shaders\\VertexShader.cso", pDevice);
 
 	Model* cube = new Model();
 	cube->mesh = Model::CreateCube(pDevice);

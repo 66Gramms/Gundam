@@ -1,5 +1,4 @@
 #pragma once
-#include "Material.h"
 #include <wrl.h>
 #include <d3d11.h>
 #include <array>
@@ -26,7 +25,7 @@ public:
 		size_t IndexCount;
 	} mesh;
 
-	Material* material;
+	class Material* material;
 
 	static Mesh CreateCube(ID3D11Device* pDevice);
 	static Mesh CreatePyramid(ID3D11Device* pDevice);
