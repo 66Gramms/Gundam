@@ -5,6 +5,7 @@ CubeMaterial::CubeMaterial(std::string pixelShaderPath, std::string vertexShader
 {
 	this->pPixelShader = CreatePixelShader(pixelShaderPath, pDevice);
 	this->pVertexShader = CreateVertexShader(vertexShaderPath, pDevice);
+	this->pColorCB = CreateColorCB(pDevice);
 }
 
 wrl::ComPtr<ID3D11PixelShader> CubeMaterial::CreatePixelShader(std::string path, ID3D11Device* pDevice)
@@ -42,4 +43,49 @@ void CubeMaterial::CreateInputLayout(wrl::ComPtr<ID3DBlob> pBlob, ID3D11Device* 
 	};
 	pDevice->CreateInputLayout(inputElementDescriptor, (UINT)std::size(inputElementDescriptor), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
 	this->pInputLayout = pInputLayout;
+}
+
+wrl::ComPtr<ID3D11Buffer> CubeMaterial::CreateColorCB(ID3D11Device* pDevice)
+{
+	struct ConstantBuffer
+	{
+		struct
+		{
+			float r;
+			float g;
+			float b;
+			float a;
+		} face_colors[12];
+	};
+	const ConstantBuffer cb =
+	{
+		{
+			{1.0f, 0.0f, 1.0f},
+			{1.0f, 0.0f, 1.0f},
+			{1.0f, 0.0f, 0.0f},
+			{1.0f, 0.0f, 0.0f},
+			{0.0f, 1.0f, 0.0f},
+			{0.0f, 1.0f, 0.0f},
+			{0.0f, 0.0f, 1.0f},
+			{0.0f, 0.0f, 1.0f},
+			{1.0f, 1.0f, 0.0f},
+			{1.0f, 1.0f, 0.0f},
+			{0.0f, 1.0f, 1.0f},
+			{0.0f, 1.0f, 1.0f},
+		}
+	};
+
+	wrl::ComPtr<ID3D11Buffer> pConstantBuffer;
+	D3D11_BUFFER_DESC cbd;
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.Usage = D3D11_USAGE_DEFAULT;
+	cbd.CPUAccessFlags = 0;
+	cbd.MiscFlags = 0;
+	cbd.ByteWidth = sizeof(cb);
+	cbd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA csd = {};
+	csd.pSysMem = &cb;
+	pDevice->CreateBuffer(&cbd, &csd, &pConstantBuffer);
+
+	return pConstantBuffer;
 }

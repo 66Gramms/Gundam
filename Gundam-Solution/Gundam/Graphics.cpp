@@ -4,6 +4,7 @@
 #include <cmath>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include "CubeMaterial.h"
 
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
@@ -159,43 +160,9 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	// Bind constant buffer
 	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
 
-	// Create constant buffer 2 (for face colors)
-	struct ConstantBuffer2
-	{
-		struct
-		{
-			float r;
-			float g;
-			float b;
-			float a;
-		} face_colors[6];
-	};
-	const ConstantBuffer2 cb2 =
-	{
-		{
-			{1.0f, 0.0f, 1.0f},
-			{1.0f, 0.0f, 0.0f},
-			{0.0f, 1.0f, 0.0f},
-			{0.0f, 0.0f, 1.0f},
-			{1.0f, 1.0f, 0.0f},
-			{0.0f, 1.0f, 1.0f},
-		}
-	};
-
-	wrl::ComPtr<ID3D11Buffer> pConstantBuffer2;
-	D3D11_BUFFER_DESC cbd2;
-	cbd2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbd2.Usage = D3D11_USAGE_DEFAULT;
-	cbd2.CPUAccessFlags = 0;
-	cbd2.MiscFlags = 0;
-	cbd2.ByteWidth = sizeof(cb2);
-	cbd2.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA csd2 = {};
-	csd2.pSysMem = &cb2;
-	pDevice->CreateBuffer(&cbd2, &csd2, &pConstantBuffer2);
-
-	// Bind constant buffer 2
-	pContext->PSSetConstantBuffers(0, 1, pConstantBuffer2.GetAddressOf());
+	// Bind constant buffer 2 (for face colors)
+	CubeMaterial* cubeMaterial = static_cast<CubeMaterial*>(model->material);
+	pContext->PSSetConstantBuffers(0, 1, cubeMaterial->pColorCB.GetAddressOf());
 
 	// Bind input layout
 	pContext->IASetInputLayout(model->material->pInputLayout.Get());
