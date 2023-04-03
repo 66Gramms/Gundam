@@ -40,3 +40,9 @@ void Material::CreateInputLayout(wrl::ComPtr<ID3DBlob> pBlob, ID3D11Device* pDev
 	pDevice->CreateInputLayout(inputElementDescriptor, (UINT)std::size(inputElementDescriptor), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
 	this->pInputLayout = pInputLayout;
 }
+
+void Material::SetShaders(ID3D11Device* pDevice)
+{
+	CreatePixelShader("shaders\\PixelShader.cso", pDevice);
+	CreateVertexShader("shaders\\VertexShader.cso", pDevice);
+}

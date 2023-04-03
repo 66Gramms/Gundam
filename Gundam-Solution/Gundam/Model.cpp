@@ -104,12 +104,3 @@ Model::Mesh Model::CreateCube(ID3D11Device* pDevice)
 
 	return mesh;
 }
-
-void Model::SetShaders(ID3D11Device* pDevice)
-{
-	material->CreatePixelShader("shaders\\PixelShader.cso", pDevice);
-	material->CreateVertexShader("shaders\\VertexShader.cso", pDevice);
-	this->pPixelShader = material->pPixelShader;
-	this->pVertexShader = material->pVertexShader;
-	this->pInputLayout = material->pInputLayout;
-}

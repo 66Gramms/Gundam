@@ -122,10 +122,10 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	pContext->IASetIndexBuffer(model->mesh.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 	// Bind pixel shader
-	pContext->PSSetShader(model->pPixelShader.Get(), nullptr, 0);
+	pContext->PSSetShader(model->material->GetPixelShader().Get(), nullptr, 0);
 
 	// Bind vertex shader
-	pContext->VSSetShader(model->pVertexShader.Get(), nullptr, 0);
+	pContext->VSSetShader(model->material->GetVertexShader().Get(), nullptr, 0);
 
 	// Create constant buffer (for transformation matrix)
 	struct ConstantBuffer
@@ -158,7 +158,7 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	// Bind constant buffer
 	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
 
-	// Create constant buffer 2
+	// Create constant buffer 2 (for face colors)
 	struct ConstantBuffer2
 	{
 		struct
@@ -197,7 +197,7 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	pContext->PSSetConstantBuffers(0, 1, pConstantBuffer2.GetAddressOf());
 
 	// Bind input layout
-	pContext->IASetInputLayout(model->pInputLayout.Get());
+	pContext->IASetInputLayout(model->material->GetInputLayout().Get());
 
 	pContext->DrawIndexed((UINT)model->mesh.IndexCount, 0, 0);
 }

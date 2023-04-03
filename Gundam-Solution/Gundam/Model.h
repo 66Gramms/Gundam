@@ -26,14 +26,8 @@ public:
 		size_t IndexCount;
 	} mesh;
 
-	Material* material = new Material();
-
-	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
-	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
+	Material* material;
 
 	static Mesh CreateCube(ID3D11Device* pDevice);
 	static Mesh CreatePyramid(ID3D11Device* pDevice);
-
-	void SetShaders(ID3D11Device* pDevice);
 };

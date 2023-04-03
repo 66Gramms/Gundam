@@ -7,14 +7,17 @@ int App::Start()
 {
 	pDevice = window.GetGfx().GetPDevice().Get();
 
+	Material* defaultMaterial = new Material();
+	defaultMaterial->SetShaders(pDevice);
+
 	Model* cube = new Model();
 	cube->mesh = Model::CreateCube(pDevice);
-	cube->SetShaders(pDevice);
+	cube->material = defaultMaterial;
 	models.push_back(cube);
 
 	Model* pyramid = new Model();
 	pyramid->mesh = Model::CreatePyramid(pDevice);
-	pyramid->SetShaders(pDevice);
+	pyramid->material = defaultMaterial;
 	models.push_back(pyramid);
 
 	while (true)
@@ -38,7 +41,7 @@ void App::Update()
 	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
 	window.GetGfx().ClearBuffer(c, c, 1.0f);
 
-	window.GetGfx().DrawModel(models[1], timer.Peek(), window.mouse.GetPosX() / 400.0f - 1, -window.mouse.GetPosY() / 300.0f + 1);
-	window.GetGfx().DrawModel(models[0], -timer.Peek(), 0.0f, 0.0f);
+	window.GetGfx().DrawModel(models[0], timer.Peek(), 1.5f, 0.0f);
+	window.GetGfx().DrawModel(models[1], -timer.Peek(), -1.5f, 0.0f);
 	window.GetGfx().EndFrame();
 }
