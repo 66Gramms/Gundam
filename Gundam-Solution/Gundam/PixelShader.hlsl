@@ -1,9 +1,14 @@
-cbuffer CBuf : register(b0)
+Texture2D simpleTexture : register(t0);
+
+SamplerState MeshTextureSampler : register(s0);
+
+struct PixelIn
 {
-	float4 triangle_colors[12];
+	float4 position : SV_Position;
+	float2 uv : TexCoord;
 };
 
-float4 main(uint tid : SV_PrimitiveID) : SV_TARGET
+float4 main(PixelIn input) : SV_TARGET0
 {
-	return triangle_colors[tid];
+	return simpleTexture.Sample(MeshTextureSampler, input.uv);
 }

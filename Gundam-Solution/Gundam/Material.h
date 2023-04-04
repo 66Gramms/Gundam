@@ -9,6 +9,8 @@ namespace wrl = Microsoft::WRL;
 class Material
 {
 public:
+	virtual void Nothing() {};
+
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;

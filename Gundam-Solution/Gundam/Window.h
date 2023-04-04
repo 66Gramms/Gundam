@@ -57,8 +57,6 @@ private:
 
 	int windowWidth;
 	int windowHeight;
-	int screenWidth;
-	int screenHeight;
 	HWND hWnd;
 	std::unique_ptr<Graphics> pGfx;
 };

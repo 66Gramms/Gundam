@@ -50,10 +50,9 @@ Window::Window(int width, int height, const char* name) : windowWidth(width), wi
 		throw CHWND_LAST_EXCEPT();
 	}
 
-	screenWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-	screenHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-
 #if FULLSCREEN
+	int screenWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	int screenHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
 	ChangeDisplaySettings(nullptr, CDS_FULLSCREEN);
 	ShowCursor(FALSE);
 	hWnd = CreateWindow(WindowClass::GetName(), name, WS_POPUP | WS_VISIBLE | WS_MAXIMIZE, 0, 0, screenWidth, screenHeight,

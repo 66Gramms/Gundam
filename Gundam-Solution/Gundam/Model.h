@@ -16,6 +16,12 @@ public:
 			float y;
 			float z;
 		} pos;
+
+		struct
+		{
+			float u;
+			float v;
+		} texCord;
 	};
 
 	struct Mesh

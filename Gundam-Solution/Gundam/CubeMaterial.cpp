@@ -1,4 +1,5 @@
 #include "CubeMaterial.h"
+#include "DirectXTex.h"
 #include <d3dcompiler.h>
 #include <vector>
 
@@ -7,6 +8,26 @@ CubeMaterial::CubeMaterial(std::string pixelShaderPath, std::string vertexShader
 	this->pPixelShader = CreatePixelShader(pixelShaderPath, pDevice);
 	this->pVertexShader = CreateVertexShader(vertexShaderPath, pDevice);
 	this->pColorCB = CreateColorCB(pDevice);
+
+	DirectX::TexMetadata metadata;
+	DirectX::ScratchImage scratchImage;
+	DirectX::LoadFromWICFile(L"textures/grass.jpg", DirectX::WIC_FLAGS_NONE, &metadata, scratchImage);
+
+	wrl::ComPtr<ID3D11Resource> texture = nullptr;
+	DirectX::CreateTexture(pDevice, scratchImage.GetImages(), scratchImage.GetImageCount(), metadata, &texture);
+
+	pDevice->CreateShaderResourceView(texture.Get(), nullptr, &CubesTexture);
+
+	D3D11_SAMPLER_DESC sampDesc = {};
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	pDevice->CreateSamplerState(&sampDesc, &CubesTexSamplerState);
 }
 
 wrl::ComPtr<ID3D11PixelShader> CubeMaterial::CreatePixelShader(std::string path, ID3D11Device* pDevice)
@@ -40,7 +61,8 @@ void CubeMaterial::CreateInputLayout(wrl::ComPtr<ID3DBlob> pBlob, ID3D11Device* 
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
 	const D3D11_INPUT_ELEMENT_DESC inputElementDescriptor[] =
 	{
-		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 	pDevice->CreateInputLayout(inputElementDescriptor, (UINT)std::size(inputElementDescriptor), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
 	this->pInputLayout = pInputLayout;

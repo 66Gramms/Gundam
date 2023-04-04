@@ -57,14 +57,14 @@ Model::Mesh Model::CreateCube(ID3D11Device* pDevice)
 
 	const Model::Vertex vertices[] =
 	{
-		{-1.0f, -1.0f, -1.0f},
-		{ 1.0f, -1.0f, -1.0f},
-		{-1.0f,  1.0f, -1.0f},
-		{ 1.0f,  1.0f, -1.0f},
-		{-1.0f, -1.0f,  1.0f},
-		{ 1.0f, -1.0f,  1.0f},
-		{-1.0f,  1.0f,  1.0f},
-		{ 1.0f,  1.0f,  1.0f},
+		{{-1.0f, -1.0f, -1.0f}, {0, 0}},
+		{{ 1.0f, -1.0f, -1.0f}, {0, 1}},
+		{{-1.0f,  1.0f, -1.0f}, {1, 0}},
+		{{ 1.0f,  1.0f, -1.0f}, {1, 1}},
+		{{-1.0f, -1.0f,  1.0f}, {0, 0}},
+		{{ 1.0f, -1.0f,  1.0f}, {0, 1}},
+		{{-1.0f,  1.0f,  1.0f}, {1, 0}},
+		{{ 1.0f,  1.0f,  1.0f}, {1, 1}},
 	};
 
 	const unsigned short indices[] =
@@ -76,6 +76,7 @@ Model::Mesh Model::CreateCube(ID3D11Device* pDevice)
 		0, 4, 2,  2, 4, 6,
 		0, 1, 4,  1, 5, 4
 	};
+
 	mesh.IndexCount = std::size(indices);
 
 	// Create vertex buffer

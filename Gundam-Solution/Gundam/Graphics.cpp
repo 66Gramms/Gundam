@@ -1,10 +1,10 @@
 #include "Graphics.h"
 #include "Model.h"
 #include "Material.h"
+#include "CubeMaterial.h"
 #include <cmath>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
-#include "CubeMaterial.h"
 
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
@@ -64,8 +64,14 @@ Graphics::Graphics(HWND hWnd)
 	// Create depth stencil texture
 	wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
 	D3D11_TEXTURE2D_DESC descDepth = {};
+
+#if FULLSCREEN
+	descDepth.Width = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	descDepth.Height = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+#else
 	descDepth.Width = 800;
 	descDepth.Height = 600;
+#endif
 	descDepth.MipLevels = 1;
 	descDepth.ArraySize = 1;
 	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
@@ -87,8 +93,13 @@ Graphics::Graphics(HWND hWnd)
 
 	// Configure viewport
 	D3D11_VIEWPORT vp;
+#if FULLSCREEN
+	vp.Width = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	vp.Height = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+#else
 	vp.Width = 800;
 	vp.Height = 600;
+#endif
 	vp.MinDepth = 0;
 	vp.MaxDepth = 1;
 	vp.TopLeftX = 0;
@@ -161,7 +172,14 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
 
 	// Bind constant pixel buffer
-	pContext->PSSetConstantBuffers(0, 1, model->material->pColorCB.GetAddressOf());
+	//pContext->PSSetConstantBuffers(0, 1, model->material->pColorCB.GetAddressOf());
+
+	CubeMaterial* cubeMaterial = dynamic_cast<CubeMaterial*>(model->material);
+	if (cubeMaterial)
+	{
+		pContext->PSSetShaderResources(0, 1, cubeMaterial->CubesTexture.GetAddressOf());
+		pContext->PSSetSamplers(0, 1, cubeMaterial->CubesTexSamplerState.GetAddressOf());
+	}
 
 	// Bind input layout
 	pContext->IASetInputLayout(model->material->pInputLayout.Get());
