@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Model.h"
 #include "CubeMaterial.h"
+#include "PyramidMaterial.h"
 
 App::App() : window(800, 600, "Title") {}
 
@@ -9,6 +10,7 @@ int App::Start()
 	pDevice = window.GetGfx().GetPDevice().Get();
 
 	CubeMaterial* defaultMaterial = new CubeMaterial("shaders\\PixelShader.cso", "shaders\\VertexShader.cso", pDevice);
+	PyramidMaterial* pyramidMaterial = new PyramidMaterial("shaders\\PixelShader.cso", "shaders\\VertexShader.cso", pDevice);
 
 	Model* cube = new Model();
 	cube->mesh = Model::CreateCube(pDevice);
@@ -17,7 +19,7 @@ int App::Start()
 
 	Model* pyramid = new Model();
 	pyramid->mesh = Model::CreatePyramid(pDevice);
-	pyramid->material = defaultMaterial;
+	pyramid->material = pyramidMaterial;
 	models.push_back(pyramid);
 
 	while (true)

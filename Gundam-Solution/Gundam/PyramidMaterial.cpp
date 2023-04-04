@@ -1,15 +1,15 @@
-#include "CubeMaterial.h"
+#include "PyramidMaterial.h"
 #include <d3dcompiler.h>
 #include <vector>
 
-CubeMaterial::CubeMaterial(std::string pixelShaderPath, std::string vertexShaderPath, ID3D11Device* pDevice)
+PyramidMaterial::PyramidMaterial(std::string pixelShaderPath, std::string vertexShaderPath, ID3D11Device* pDevice)
 {
 	this->pPixelShader = CreatePixelShader(pixelShaderPath, pDevice);
 	this->pVertexShader = CreateVertexShader(vertexShaderPath, pDevice);
 	this->pColorCB = CreateColorCB(pDevice);
 }
 
-wrl::ComPtr<ID3D11PixelShader> CubeMaterial::CreatePixelShader(std::string path, ID3D11Device* pDevice)
+wrl::ComPtr<ID3D11PixelShader> PyramidMaterial::CreatePixelShader(std::string path, ID3D11Device* pDevice)
 {
 	std::wstring stemp = std::wstring(path.begin(), path.end());
 	LPCWSTR sw = stemp.c_str();
@@ -21,7 +21,7 @@ wrl::ComPtr<ID3D11PixelShader> CubeMaterial::CreatePixelShader(std::string path,
 	return pPixelShader;
 }
 
-wrl::ComPtr<ID3D11VertexShader> CubeMaterial::CreateVertexShader(std::string path, ID3D11Device* pDevice)
+wrl::ComPtr<ID3D11VertexShader> PyramidMaterial::CreateVertexShader(std::string path, ID3D11Device* pDevice)
 {
 	std::wstring stemp = std::wstring(path.begin(), path.end());
 	LPCWSTR sw = stemp.c_str();
@@ -35,7 +35,7 @@ wrl::ComPtr<ID3D11VertexShader> CubeMaterial::CreateVertexShader(std::string pat
 	return pVertexShader;
 }
 
-void CubeMaterial::CreateInputLayout(wrl::ComPtr<ID3DBlob> pBlob, ID3D11Device* pDevice)
+void PyramidMaterial::CreateInputLayout(wrl::ComPtr<ID3DBlob> pBlob, ID3D11Device* pDevice)
 {
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
 	const D3D11_INPUT_ELEMENT_DESC inputElementDescriptor[] =
@@ -46,7 +46,7 @@ void CubeMaterial::CreateInputLayout(wrl::ComPtr<ID3DBlob> pBlob, ID3D11Device* 
 	this->pInputLayout = pInputLayout;
 }
 
-wrl::ComPtr<ID3D11Buffer> CubeMaterial::CreateColorCB(ID3D11Device* pDevice)
+wrl::ComPtr<ID3D11Buffer> PyramidMaterial::CreateColorCB(ID3D11Device* pDevice)
 {
 	struct ConstantBuffer
 	{
@@ -56,22 +56,16 @@ wrl::ComPtr<ID3D11Buffer> CubeMaterial::CreateColorCB(ID3D11Device* pDevice)
 			float g;
 			float b;
 			float a;
-		} triangle_colors[12];
+		} triangle_colors[6];
 	};
 	const ConstantBuffer cb =
 	{
 		{
 			{1.0f, 0.0f, 1.0f},
-			{1.0f, 0.0f, 1.0f},
-			{1.0f, 0.0f, 0.0f},
 			{1.0f, 0.0f, 0.0f},
 			{0.0f, 1.0f, 0.0f},
-			{0.0f, 1.0f, 0.0f},
-			{0.0f, 0.0f, 1.0f},
 			{0.0f, 0.0f, 1.0f},
 			{1.0f, 1.0f, 0.0f},
-			{1.0f, 1.0f, 0.0f},
-			{0.0f, 1.0f, 1.0f},
 			{0.0f, 1.0f, 1.0f},
 		}
 	};

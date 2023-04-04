@@ -157,12 +157,11 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	csd.pSysMem = &cb;
 	pDevice->CreateBuffer(&cbd, &csd, &pConstantBuffer);
 
-	// Bind constant buffer
+	// Bind constant vector buffer
 	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
 
-	// Bind constant buffer 2 (for face colors)
-	CubeMaterial* cubeMaterial = static_cast<CubeMaterial*>(model->material);
-	pContext->PSSetConstantBuffers(0, 1, cubeMaterial->pColorCB.GetAddressOf());
+	// Bind constant pixel buffer
+	pContext->PSSetConstantBuffers(0, 1, model->material->pColorCB.GetAddressOf());
 
 	// Bind input layout
 	pContext->IASetInputLayout(model->material->pInputLayout.Get());

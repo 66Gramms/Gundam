@@ -2,10 +2,10 @@
 
 #include "Material.h"
 
-class CubeMaterial : public Material
+class PyramidMaterial : public Material
 {
 public:
-	CubeMaterial(std::string pixelShaderPath, std::string vertexShaderPath, ID3D11Device* pDevice);
+	PyramidMaterial(std::string pixelShaderPath, std::string vertexShaderPath, ID3D11Device* pDevice);
 
 private:
 	wrl::ComPtr<ID3D11PixelShader> CreatePixelShader(std::string path, ID3D11Device* pDevice);
