@@ -10,7 +10,7 @@ int App::Start()
 	pDevice = window.GetGfx().GetPDevice().Get();
 
 	CubeMaterial* defaultMaterial = new CubeMaterial("shaders\\PixelShader.cso", "shaders\\VertexShader.cso", pDevice);
-	PyramidMaterial* pyramidMaterial = new PyramidMaterial("shaders\\PixelShader.cso", "shaders\\VertexShader.cso", pDevice);
+	PyramidMaterial* pyramidMaterial = new PyramidMaterial("shaders\\PSDefault.cso", "shaders\\VSDefault.cso", pDevice);
 
 	Model* cube = new Model();
 	cube->mesh = Model::CreateCube(pDevice);

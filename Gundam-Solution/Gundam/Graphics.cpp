@@ -172,7 +172,7 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
 
 	// Bind constant pixel buffer
-	//pContext->PSSetConstantBuffers(0, 1, model->material->pColorCB.GetAddressOf());
+	pContext->PSSetConstantBuffers(0, 1, model->material->pColorCB.GetAddressOf());
 
 	CubeMaterial* cubeMaterial = dynamic_cast<CubeMaterial*>(model->material);
 	if (cubeMaterial)
