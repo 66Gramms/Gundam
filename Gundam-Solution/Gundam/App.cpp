@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "CubeMaterial.h"
 #include "PyramidMaterial.h"
+#include "Camera.h"
 
 App::App() : window(800, 600, "Title") {}
 

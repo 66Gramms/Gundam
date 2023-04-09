@@ -51,11 +51,23 @@ void Mouse::Flush() noexcept
 
 void Mouse::OnMouseMove(int newX, int newY) noexcept
 {
+	previousX = x;
+	previousY = y;
 	x = newX;
 	y = newY;
 
 	buffer.push(Mouse::Event(Mouse::Event::Type::Move, *this));
 	TrimBuffer();
+}
+
+int Mouse::GetMouseDeltaX() const noexcept
+{
+	return std::abs(x - previousX);
+}
+
+int Mouse::GetMouseDeltaY() const noexcept
+{
+	return std::abs(y - previousY);
 }
 
 void Mouse::OnMouseEnter() noexcept

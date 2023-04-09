@@ -51,6 +51,8 @@ public:
 	std::pair<int, int> GetPos() const noexcept;
 	int GetPosX() const noexcept;
 	int GetPosY() const noexcept;
+	int GetMouseDeltaX() const noexcept;
+	int GetMouseDeltaY() const noexcept;
 	bool IsInWindow() const noexcept;
 	bool LeftIsPressed() const noexcept;
 	bool RightIsPressed() const noexcept;
@@ -71,8 +73,8 @@ private:
 	void TrimBuffer() noexcept;
 
 	static constexpr unsigned int bufferSize = 16u;
-	int x;
-	int y;
+	int x, previousX;
+	int y, previousY;
 	bool isInWindow = false;
 	bool leftIsPressed = false;
 	bool rightIsPressed = false;

@@ -174,6 +174,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeMaterial.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="GundamException.cpp" />
@@ -187,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CubeMaterial.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="GundamException.h" />
