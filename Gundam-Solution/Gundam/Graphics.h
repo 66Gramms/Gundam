@@ -1,6 +1,5 @@
 #pragma once
 #include "GundamWin.h"
-#include "Model.h"
 #include <wrl.h>
 #include <d3d11.h>
 
@@ -14,7 +13,7 @@ public:
 
 	void EndFrame();
 	void ClearBuffer(float red, float green, float blue) noexcept;
-	void DrawModel(const Model* model, float angle, float x, float y);
+	void DrawModel(const class Model* model, class Camera* camera, float angle, float x, float y);
 
 	Microsoft::WRL::ComPtr<ID3D11Device> GetPDevice() { return pDevice; };
 

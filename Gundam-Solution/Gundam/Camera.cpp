@@ -11,7 +11,7 @@ void Camera::Initialize(const uint32_t Width, const uint32_t Height, Window* win
 
 	this->window = window;
 
-	Position = DirectX::XMVectorSet(0.0f, 5.0f, -10.0f, 0.0f);
+	Position = DirectX::XMVectorSet(0.0f, 0.0f, 3.0f, 0.0f);
 	Target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	View = DirectX::XMMatrixLookAtLH(Position, Target, Up);
@@ -39,38 +39,57 @@ void Camera::Initialize(const uint32_t Width, const uint32_t Height, Window* win
 	View = DirectX::XMMatrixLookAtLH(Position, Target, Up);
 
 	DirectX::XMStoreFloat4(&CameraConstants.Position, Position);
+
+	cb =
+	{
+		{
+			DirectX::XMMatrixTranspose(
+				View *
+				DirectX::XMMatrixTranslation(CameraConstants.Position.x, CameraConstants.Position.y, CameraConstants.Position.z + 4.0f) *
+				DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 1000.0f)
+			)
+		}
+	};
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.MiscFlags = 0;
+	cbd.ByteWidth = sizeof(cb);
+	cbd.StructureByteStride = 0;
+	csd.pSysMem = &cb;
+	window->GetGfx().GetPDevice()->CreateBuffer(&cbd, &csd, &pConstantBuffer);
 }
 
 void Camera::OnUpdate(const float deltaTime) noexcept
 {
 	using namespace DirectX;
 
-	unsigned char pressedKey = window->keyboard.ReadKey().GetCode();
-	
-	switch (pressedKey)
-	{
-	case 'w':
-		BackForward += 15.0f * deltaTime * Speed;
-		break;
-	case 's':
-		BackForward -= 15.0f * deltaTime * Speed;
-		break;
-	case 'a':
-		LeftRight -= 15.0f * deltaTime * Speed;
-		break;
-	case 'd':
-		LeftRight += 15.0f * deltaTime * Speed;
-		break;
-	default:
-		return;
-		break;
-	}
-
-	if (window->mouse.LeftIsPressed())
+#ifdef _DEBUG
+	if (window->mouse.RightIsPressed())
 	{
 		Yaw += window->mouse.GetMouseDeltaX() * deltaTime;
 		Pitch += window->mouse.GetMouseDeltaY() * deltaTime;
 	}
+
+	window->keyboard.EnableAutorepeat();
+	unsigned char pressedKey = window->keyboard.ReadKey().GetCode();
+	if (pressedKey == 'W')
+	{
+		BackForward += 15.0f * deltaTime * Speed;
+	}
+	if(pressedKey == 'S')
+	{
+		BackForward -= 15.0f * deltaTime * Speed;
+	}
+	if(pressedKey == 'A')
+	{
+		LeftRight -= 15.0f * deltaTime * Speed;
+	}
+	if(pressedKey == 'D')
+	{
+		LeftRight += 15.0f * deltaTime * Speed;
+	}
+#endif
 
 	RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(Pitch, Yaw, 0);
 	Target = DirectX::XMVector3TransformCoord(DefaultForward, RotationMatrix);
@@ -89,6 +108,20 @@ void Camera::OnUpdate(const float deltaTime) noexcept
 	Target = Position + Target;
 
 	View = DirectX::XMMatrixLookAtLH(Position, Target, Up);
+
+	DirectX::XMStoreFloat4(&CameraConstants.Position, Position);
+
+	cb =
+	{
+		{
+			DirectX::XMMatrixTranspose(
+				View *
+				DirectX::XMMatrixTranslation(CameraConstants.Position.x, CameraConstants.Position.y, CameraConstants.Position.z + 4.0f) *
+				DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 1000.0f)
+			)
+		}
+	};
+	window->GetGfx().GetPDevice()->CreateBuffer(&cbd, &csd, &pConstantBuffer);
 }
 
 DirectX::XMMATRIX Camera::GetViewMatrix() const noexcept
@@ -99,4 +132,9 @@ DirectX::XMMATRIX Camera::GetViewMatrix() const noexcept
 DirectX::XMMATRIX Camera::GetProjectionMatrix() const noexcept
 {
 	return Projection;
+}
+
+Microsoft::WRL::ComPtr<ID3D11Buffer> Camera::GetConstantBuffer() const noexcept
+{
+	return pConstantBuffer;
 }

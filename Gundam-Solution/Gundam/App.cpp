@@ -10,6 +10,10 @@ int App::Start()
 {
 	pDevice = window.GetGfx().GetPDevice().Get();
 
+	Camera* camera = new Camera();
+	camera->Initialize(window.GetWidth(), window.GetHeight(), &window);
+	this->camera = camera;
+
 	CubeMaterial* defaultMaterial = new CubeMaterial("shaders\\PixelShader.cso", "shaders\\VertexShader.cso", pDevice);
 	PyramidMaterial* pyramidMaterial = new PyramidMaterial("shaders\\PSDefault.cso", "shaders\\VSDefault.cso", pDevice);
 
@@ -43,8 +47,9 @@ void App::Update()
 
 	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
 	window.GetGfx().ClearBuffer(c, c, 1.0f);
+	camera->OnUpdate(timer.DeltaTime());
 
-	window.GetGfx().DrawModel(models[0], timer.Peek(), 1.5f, 0.0f);
-	window.GetGfx().DrawModel(models[1], -timer.Peek(), -1.5f, 0.0f);
+	window.GetGfx().DrawModel(models[0], camera, timer.Peek(), 1.5f, 0.0f);
+	window.GetGfx().DrawModel(models[1], camera, -timer.Peek(), -1.5f, 0.0f);
 	window.GetGfx().EndFrame();
 }

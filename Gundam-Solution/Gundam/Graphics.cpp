@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "Material.h"
 #include "CubeMaterial.h"
+#include "Camera.h"
 #include <cmath>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -122,7 +123,7 @@ void Graphics::ClearBuffer(float red, float green, float blue) noexcept
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Graphics::DrawModel(const Model* model, float angle, float x, float z)
+void Graphics::DrawModel(const Model* model, Camera* camera, float angle, float x, float z)
 {
 	namespace wrl = Microsoft::WRL;
 
@@ -140,36 +141,8 @@ void Graphics::DrawModel(const Model* model, float angle, float x, float z)
 	// Bind vertex shader
 	pContext->VSSetShader(model->material->pVertexShader.Get(), nullptr, 0);
 
-	// Create constant buffer (for transformation matrix)
-	struct ConstantBuffer
-	{
-		dx::XMMATRIX transform;
-	};
-	const ConstantBuffer cb =
-	{
-		{
-			dx::XMMatrixTranspose(
-				dx::XMMatrixRotationZ(angle) *
-				dx::XMMatrixRotationX(angle)*
-				dx::XMMatrixTranslation(x, 0.0f, z + 4.0f) *
-				dx::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.0f)
-			)
-		}
-	};
-	wrl::ComPtr<ID3D11Buffer> pConstantBuffer;
-	D3D11_BUFFER_DESC cbd = {};
-	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbd.Usage = D3D11_USAGE_DYNAMIC;
-	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cbd.MiscFlags = 0;
-	cbd.ByteWidth = sizeof(cb);
-	cbd.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA csd = {};
-	csd.pSysMem = &cb;
-	pDevice->CreateBuffer(&cbd, &csd, &pConstantBuffer);
-
 	// Bind constant vector buffer
-	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
+	pContext->VSSetConstantBuffers(0, 1, camera->GetConstantBuffer().GetAddressOf());
 
 	// Bind constant pixel buffer
 	pContext->PSSetConstantBuffers(0, 1, model->material->pColorCB.GetAddressOf());

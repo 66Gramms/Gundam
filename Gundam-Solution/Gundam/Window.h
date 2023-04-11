@@ -15,6 +15,8 @@ public:
 	Window(const Window&) = delete;
 	Window& operator = (const Window&) = delete;
 
+	int GetWidth() const noexcept { return windowWidth; };
+	int GetHeight() const noexcept { return windowHeight; };
 	void SetTitle(const std::string& title);
 	static std::optional<int> ProcessMessages();
 	

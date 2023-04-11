@@ -60,14 +60,18 @@ void Mouse::OnMouseMove(int newX, int newY) noexcept
 	TrimBuffer();
 }
 
-int Mouse::GetMouseDeltaX() const noexcept
+int Mouse::GetMouseDeltaX() noexcept
 {
-	return std::abs(x - previousX);
+	int deltaX = x - previousX;
+	previousX = x;
+	return deltaX;
 }
 
-int Mouse::GetMouseDeltaY() const noexcept
+int Mouse::GetMouseDeltaY() noexcept
 {
-	return std::abs(y - previousY);
+	int deltaY = y - previousY;
+	previousY = y;
+	return deltaY;
 }
 
 void Mouse::OnMouseEnter() noexcept
@@ -87,6 +91,8 @@ void Mouse::OnMouseLeave() noexcept
 void Mouse::OnLeftPressed(int x, int y) noexcept
 {
 	leftIsPressed = true;
+	previousX = x;
+	previousY = y;
 
 	buffer.push(Mouse::Event(Mouse::Event::Type::LPress, *this));
 	TrimBuffer();
@@ -102,7 +108,9 @@ void Mouse::OnLeftReleased(int x, int y) noexcept
 
 void Mouse::OnRightPressed(int x, int y) noexcept
 {
-	leftIsPressed = true;
+	rightIsPressed = true;
+	previousX = x;
+	previousY = y;
 
 	buffer.push(Mouse::Event(Mouse::Event::Type::RPress, *this));
 	TrimBuffer();
@@ -110,7 +118,7 @@ void Mouse::OnRightPressed(int x, int y) noexcept
 
 void Mouse::OnRightReleased(int x, int y) noexcept
 {
-	leftIsPressed = false;
+	rightIsPressed = false;
 
 	buffer.push(Mouse::Event(Mouse::Event::Type::RRelease, *this));
 	TrimBuffer();

@@ -51,8 +51,8 @@ public:
 	std::pair<int, int> GetPos() const noexcept;
 	int GetPosX() const noexcept;
 	int GetPosY() const noexcept;
-	int GetMouseDeltaX() const noexcept;
-	int GetMouseDeltaY() const noexcept;
+	int GetMouseDeltaX() noexcept;
+	int GetMouseDeltaY() noexcept;
 	bool IsInWindow() const noexcept;
 	bool LeftIsPressed() const noexcept;
 	bool RightIsPressed() const noexcept;

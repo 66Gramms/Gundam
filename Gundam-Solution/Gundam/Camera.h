@@ -1,6 +1,8 @@
 #pragma once
 
 #include <DirectXMath.h>
+#include <wrl.h>
+#include <d3d11.h>
 
 class Camera
 {
@@ -10,6 +12,7 @@ public:
 
 	DirectX::XMMATRIX GetViewMatrix() const noexcept;
 	DirectX::XMMATRIX GetProjectionMatrix() const noexcept;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> GetConstantBuffer() const noexcept;
 
 private:
 	DirectX::XMVECTOR Position{};
@@ -31,6 +34,16 @@ private:
 	};
 	SCameraConstants CameraConstants{};
 
+	struct ConstantBuffer
+	{
+		DirectX::XMMATRIX transform;
+	};
+	ConstantBuffer cb = {};
+	D3D11_BUFFER_DESC cbd = {};
+	D3D11_SUBRESOURCE_DATA csd = {};
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
+
 	float Speed = 1.0f;
 
 	float LeftRight = 0.0f;
@@ -40,4 +53,3 @@ private:
 
 	class Window* window;
 };
-#pragma once

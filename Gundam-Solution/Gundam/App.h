@@ -15,4 +15,5 @@ private:
 
 	class ID3D11Device* pDevice;
 	std::vector<class Model*> models;
+	class Camera* camera;
 };

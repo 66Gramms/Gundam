@@ -5,6 +5,7 @@ using namespace std::chrono;
 GundamTimer::GundamTimer()
 {
 	last = steady_clock::now();
+	lastFrame = last;
 }
 
 float GundamTimer::Mark()
@@ -18,4 +19,11 @@ float GundamTimer::Mark()
 float GundamTimer::Peek() const
 {
 	return duration<float>(steady_clock::now() - last).count();
+}
+
+float GundamTimer::DeltaTime()
+{
+	duration<float> deltaTime = steady_clock::now() - lastFrame;
+	lastFrame = steady_clock::now();
+	return deltaTime.count();
 }
