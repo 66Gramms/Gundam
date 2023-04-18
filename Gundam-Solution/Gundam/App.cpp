@@ -20,11 +20,13 @@ int App::Start()
 	Model* cube = new Model();
 	cube->mesh = Model::CreateCube(pDevice);
 	cube->material = defaultMaterial;
+	cube->CreateConstantBuffer(pDevice);
 	models.push_back(cube);
 
 	Model* pyramid = new Model();
 	pyramid->mesh = Model::CreatePyramid(pDevice);
 	pyramid->material = pyramidMaterial;
+	pyramid->CreateConstantBuffer(pDevice);
 	models.push_back(pyramid);
 
 	while (true)
@@ -49,7 +51,7 @@ void App::Update()
 	window.GetGfx().ClearBuffer(c, c, 1.0f);
 	camera->OnUpdate(timer.DeltaTime());
 
-	window.GetGfx().DrawModel(models[0], camera, timer.Peek(), 1.5f, 0.0f);
-	window.GetGfx().DrawModel(models[1], camera, -timer.Peek(), -1.5f, 0.0f);
+	window.GetGfx().DrawModel(models[0], camera, timer.Peek(), sin(timer.Peek()) * 5, 0.0f);
+	window.GetGfx().DrawModel(models[1], camera, -timer.Peek(), 0.0f, cos(timer.Peek()) * 5);
 	window.GetGfx().EndFrame();
 }

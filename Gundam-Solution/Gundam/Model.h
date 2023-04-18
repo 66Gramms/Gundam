@@ -2,6 +2,7 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <array>
+#include <DirectXMath.h>
 
 namespace wrl = Microsoft::WRL;
 
@@ -23,6 +24,8 @@ public:
 			float v;
 		} texCord;
 	};
+	Microsoft::WRL::ComPtr<ID3D11Buffer> GetConstantBuffer() const noexcept;
+	void CreateConstantBuffer(ID3D11Device* pDevice);
 
 	struct Mesh
 	{
@@ -35,4 +38,13 @@ public:
 
 	static Mesh CreateCube(ID3D11Device* pDevice);
 	static Mesh CreatePyramid(ID3D11Device* pDevice);
+
+	typedef struct ConstantBuffer
+	{
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
+		DirectX::XMMATRIX projection;
+	}ConstantBuffer;
+	ConstantBuffer cb = {};
+	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
 };

@@ -56,7 +56,7 @@ wrl::ComPtr<ID3D11Buffer> PyramidMaterial::CreateColorCB(ID3D11Device* pDevice)
 			float g;
 			float b;
 			float a;
-		} triangle_colors[6];
+		} triangle_colors[12];
 	};
 	const ConstantBuffer cb =
 	{

@@ -1,6 +1,8 @@
 cbuffer CBuf : register(b0)
 {
-	matrix transform;
+	matrix world;
+	matrix view;
+	matrix projection;
 };
 
 struct VertexOut
@@ -12,7 +14,8 @@ struct VertexOut
 VertexOut main(float3 pos : POSITION, float2 uv : TEXCOORD) 
 {
 	VertexOut output;
-	output.position = mul(float4(pos, 1.0f), transform);
+	matrix WorldViewProj = mul(mul(world, view), projection);
+	output.position = mul(float4(pos, 1), WorldViewProj);
 	output.uv = uv;
 	return output;
 }

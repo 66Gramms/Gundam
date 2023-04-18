@@ -12,7 +12,6 @@ public:
 
 	DirectX::XMMATRIX GetViewMatrix() const noexcept;
 	DirectX::XMMATRIX GetProjectionMatrix() const noexcept;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> GetConstantBuffer() const noexcept;
 
 private:
 	DirectX::XMVECTOR Position{};
@@ -28,21 +27,6 @@ private:
 	DirectX::XMMATRIX View{};
 	DirectX::XMMATRIX Projection{};
 
-	struct SCameraConstants
-	{
-		DirectX::XMFLOAT4 Position;
-	};
-	SCameraConstants CameraConstants{};
-
-	struct ConstantBuffer
-	{
-		DirectX::XMMATRIX transform;
-	};
-	ConstantBuffer cb = {};
-	D3D11_BUFFER_DESC cbd = {};
-	D3D11_SUBRESOURCE_DATA csd = {};
-
-	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
 
 	float Speed = 1.0f;
 
@@ -50,6 +34,10 @@ private:
 	float BackForward = 0.0f;
 	float Yaw = 0.0f;
 	float Pitch = 0.0f;
+	uint32_t Width = 0;
+	uint32_t Height = 0;
+
+	float totalTime = 0;
 
 	class Window* window;
 };

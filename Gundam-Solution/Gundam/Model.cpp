@@ -1,5 +1,19 @@
 #include "Model.h"
 
+void Model::CreateConstantBuffer(ID3D11Device* pDevice)
+{
+	D3D11_BUFFER_DESC cbd = {};
+	D3D11_SUBRESOURCE_DATA csd = {};
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.MiscFlags = 0;
+	cbd.ByteWidth = sizeof(cb);
+	cbd.StructureByteStride = 0;
+	csd.pSysMem = &cb;
+	pDevice->CreateBuffer(&cbd, &csd, &pConstantBuffer);
+}
+
 Model::Mesh Model::CreatePyramid(ID3D11Device* pDevice)
 {
 	Model::Mesh mesh = {};
@@ -49,6 +63,11 @@ Model::Mesh Model::CreatePyramid(ID3D11Device* pDevice)
 	pDevice->CreateBuffer(&ibd, &isd, &mesh.pIndexBuffer);
 
 	return mesh;
+}
+
+Microsoft::WRL::ComPtr<ID3D11Buffer> Model::GetConstantBuffer() const noexcept
+{
+	return pConstantBuffer;
 }
 
 Model::Mesh Model::CreateCube(ID3D11Device* pDevice)

@@ -13,7 +13,7 @@ public:
 
 	void EndFrame();
 	void ClearBuffer(float red, float green, float blue) noexcept;
-	void DrawModel(const class Model* model, class Camera* camera, float angle, float x, float y);
+	void DrawModel(class Model* model, class Camera* camera, float angle, float x, float y);
 
 	Microsoft::WRL::ComPtr<ID3D11Device> GetPDevice() { return pDevice; };
 
