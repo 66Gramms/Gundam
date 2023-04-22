@@ -177,7 +177,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeMaterial.cpp" />
     <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="GundamException.cpp" />
     <ClCompile Include="GundamTimer.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -191,7 +190,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CubeMaterial.h" />
     <ClInclude Include="Graphics.h" />
-    <ClInclude Include="GundamException.h" />
     <ClInclude Include="GundamTimer.h" />
     <ClInclude Include="GundamWin.h" />
     <ClInclude Include="Keyboard.h" />
