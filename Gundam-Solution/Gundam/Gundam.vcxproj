@@ -110,6 +110,10 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /i "$(ProjectDir)shaders\" "$(OutDir)shaders\"
+xcopy /i "$(ProjectDir)textures\" "$(OutDir)textures\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -129,6 +133,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /i "$(ProjectDir)shaders\" "$(OutDir)shaders\"
+xcopy /i "$(ProjectDir)textures\" "$(OutDir)textures\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -149,6 +157,10 @@
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /i "$(ProjectDir)shaders\" "$(OutDir)shaders\"
+xcopy /i "$(ProjectDir)textures\" "$(OutDir)textures\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -171,6 +183,10 @@
       <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)DirectXTex\Bin\Desktop_2022_Win10\x64\Release</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /i "$(ProjectDir)shaders\" "$(OutDir)shaders\"
+xcopy /i "$(ProjectDir)textures\" "$(OutDir)textures\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
