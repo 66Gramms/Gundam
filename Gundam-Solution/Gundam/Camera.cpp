@@ -17,14 +17,14 @@ void Camera::Initialize(const uint32_t Width, const uint32_t Height, Window* win
     this->Width = Width;
     this->Height = Height;
 
-    Position = DirectX::XMVectorSet(0.0f, 5.0f, -10.0f, 0.0f);
+    Position = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
     Target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
     Up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
     View = DirectX::XMMatrixLookAtLH(Position, Target, Up);
     const auto AspectRatio = static_cast<float>(Width) / static_cast<float>(Height);
     Projection = DirectX::XMMatrixPerspectiveFovLH(0.4f * 3.14f, AspectRatio, 0.1f, 1000.0f);
 
-    OnUpdate(0.0f);
+    OnUpdate(0.0f, 0.0f, 0.0f, -10.0f);
 
     RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(Pitch, Yaw, 0);
     Target = DirectX::XMVector3TransformCoord(DefaultForward, RotationMatrix);
@@ -47,34 +47,36 @@ void Camera::Initialize(const uint32_t Width, const uint32_t Height, Window* win
 
 }
 
-void Camera::OnUpdate(const float deltaTime) noexcept
+void Camera::OnUpdate(const float deltaTime, float x, float y, float z) noexcept
 {
     using namespace DirectX;
 
-    if (window->mouse.RightIsPressed())
-    {
-        Yaw += window->mouse.GetMouseDeltaX() * deltaTime / 5.0f;
-        Pitch += window->mouse.GetMouseDeltaY() * deltaTime / 5.0f;
-    }
+    //if (window->mouse.RightIsPressed())
+    //{
+    //    Yaw += window->mouse.GetMouseDeltaX() * deltaTime / 5.0f;
+    //    Pitch += window->mouse.GetMouseDeltaY() * deltaTime / 5.0f;
+    //}
 
-    if (GetAsyncKeyState(VK_KEY_W) & 0x8000)
-    {
-        BackForward += 15.0f * deltaTime * Speed;
-    }
-    if (GetAsyncKeyState(VK_KEY_S) & 0x8000)
-    {
-        BackForward -= 15.0f * deltaTime * Speed;
-    }
-    if (GetAsyncKeyState(VK_KEY_A) & 0x8000)
-    {
-        LeftRight -= 15.0f * deltaTime * Speed;
-    }
-    if (GetAsyncKeyState(VK_KEY_D) & 0x8000)
-    {
-        LeftRight += 15.0f * deltaTime * Speed;
-    }
-
-    View = DirectX::XMMatrixLookAtLH(Position, Target, Up);
+    //if (GetAsyncKeyState(VK_KEY_W) & 0x8000)
+    //{
+    //    BackForward += 15.0f * deltaTime * Speed;
+    //}
+    //if (GetAsyncKeyState(VK_KEY_S) & 0x8000)
+    //{
+    //    BackForward -= 15.0f * deltaTime * Speed;
+    //}
+    //if (GetAsyncKeyState(VK_KEY_A) & 0x8000)
+    //{
+    //    LeftRight -= 15.0f * deltaTime * Speed;
+    //}
+    //if (GetAsyncKeyState(VK_KEY_D) & 0x8000)
+    //{
+    //    LeftRight += 15.0f * deltaTime * Speed;
+    //}
+    DirectX::XMVECTOR lookatTarget;
+    auto templookat = DirectX::XMFLOAT3(0, 0, 0);
+    lookatTarget = DirectX::XMLoadFloat3(&templookat);
+    View = DirectX::XMMatrixLookAtLH(Position, lookatTarget, Up);
     RotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(Pitch, Yaw, 0);
     Target = DirectX::XMVector3TransformCoord(DefaultForward, RotationMatrix);
     Target = DirectX::XMVector3Normalize(Target);
@@ -83,8 +85,7 @@ void Camera::OnUpdate(const float deltaTime) noexcept
     Forward = DirectX::XMVector3TransformCoord(DefaultForward, RotationMatrix);
     Up = DirectX::XMVector3Cross(Forward, Right);
 
-    Position += LeftRight * Right;
-    Position += BackForward * Forward;
+    Position = DirectX::XMVectorSet(x, y, z, 0.0f);
 
     LeftRight = 0.0f;
     BackForward = 0.0f;

@@ -10,6 +10,8 @@ App::App() : window(GetSystemMetrics(SM_CXVIRTUALSCREEN), GetSystemMetrics(SM_CY
 App::App() : window(800, 600, "Gundam-engine") {}
 #endif
 
+int NuberOfPyramids = 9;
+
 int App::Start()
 {
     pDevice = window.GetGfx().GetPDevice().Get();
@@ -32,24 +34,8 @@ int App::Start()
     pyramid->CreateConstantBuffer(pDevice);
 
     models.push_back(cube);
-    models.push_back(cube);
-    models.push_back(cube);
-    models.push_back(cube);
-
-    models.push_back(pyramid);
-    models.push_back(pyramid);
-    models.push_back(pyramid);
-    models.push_back(pyramid);
-
-    models.push_back(cube);
-    models.push_back(cube);
-    models.push_back(cube);
-    models.push_back(cube);
-
-    models.push_back(pyramid);
-    models.push_back(pyramid);
-    models.push_back(pyramid);
-    models.push_back(pyramid);
+    for (int i = 0; i < NuberOfPyramids; i++)
+        models.push_back(pyramid);
 
     while (true)
     {
@@ -70,17 +56,19 @@ void App::Update()
     }
 
     const float c = sin(timer.Peek()) / 2.0f + 0.5f;
-    window.GetGfx().ClearBuffer(c, c, 1.0f);
-    camera->OnUpdate(timer.DeltaTime());
-    int mod = 0;
-    for (int i = 0; i < 4; ++i)
-    {
-        for (int j = 0; j < 4; ++j)
-        {
-            window.GetGfx().DrawModel(models[mod], camera, ((i + j) % 2) ? timer.Peek() : -timer.Peek(), j * 5, i * 5);
-            mod += 1;
-        }
-    }
+    window.GetGfx().ClearBuffer(0.1f, c * 0.65f, 0.1f);
+    camera->OnUpdate(timer.DeltaTime(), sin(timer.Peek()) * 15.f, sin(timer.Peek()) * 11.5f, cos(timer.Peek()) * 20.f);
+    window.GetGfx().DrawModel(models[0], camera, sin(timer.Peek() / 2.0f) * -1.2f, sin(timer.Peek() / 2.0f) * 1.2f, 0, 0, 0);
+
+    for (int i = 1; i < NuberOfPyramids + 1; i++)
+        window.GetGfx().DrawModel(models[i], camera, i % 2 == 1 ? timer.Peek() + i : -timer.Peek() + i, i % 2 == 1 ? timer.Peek() : -timer.Peek(), i * ((1 / (float)NuberOfPyramids) * 40) - 20.6666, 0, abs(sin(3.1415926535 / (float)NuberOfPyramids * i)) * 15.0f);
+    for (int i = 1; i < NuberOfPyramids + 1; i++)
+        window.GetGfx().DrawModel(models[i], camera, i % 2 == 1 ? timer.Peek() + i : -timer.Peek() + i, i % 2 == 1 ? timer.Peek() : -timer.Peek(), i * ((1 / (float)NuberOfPyramids) * 40) - 20.6666, 0, abs(sin(3.1415926535 / (float)NuberOfPyramids * i)) * -15.0f);
+
+    for (int i = 1; i < NuberOfPyramids + 1; i++)
+        window.GetGfx().DrawModel(models[i], camera, i % 2 == 1 ? timer.Peek() + i : -timer.Peek() + i, i % 2 == 1 ? timer.Peek() : -timer.Peek(), 0, i * ((1 / (float)NuberOfPyramids) * 40) - 20.6666, abs(sin(3.1415926535 / (float)NuberOfPyramids * i)) * 15.0f);
+    for (int i = 1; i < NuberOfPyramids + 1; i++)
+        window.GetGfx().DrawModel(models[i], camera, i % 2 == 1 ? timer.Peek() + i : -timer.Peek() + i, i % 2 == 1 ? timer.Peek() : -timer.Peek(), 0, i * ((1 / (float)NuberOfPyramids) * 40) - 20.6666, abs(sin(3.1415926535 / (float)NuberOfPyramids * i)) * -15.0f);
 
     window.GetGfx().EndFrame();
 }

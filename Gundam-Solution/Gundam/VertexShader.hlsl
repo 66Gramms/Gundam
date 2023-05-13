@@ -14,6 +14,7 @@ struct VertexOut
 VertexOut main(float3 pos : POSITION, float2 uv : TEXCOORD) 
 {
 	VertexOut output;
+	pos = mul(pos, 2.f);
 	matrix WorldViewProj = mul(mul(world, view), projection);
 	output.position = mul(float4(pos, 1), WorldViewProj);
 	output.uv = uv;

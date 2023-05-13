@@ -123,7 +123,7 @@ void Graphics::ClearBuffer(float red, float green, float blue) noexcept
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Graphics::DrawModel(Model* model, Camera* camera, float angle, float x, float z)
+void Graphics::DrawModel(Model* model, Camera* camera, float angleY, float angleX, float x, float y, float z)
 {
 	namespace wrl = Microsoft::WRL;
 
@@ -144,7 +144,7 @@ void Graphics::DrawModel(Model* model, Camera* camera, float angle, float x, flo
 	// Bind constant vector buffer
 	pContext->VSSetConstantBuffers(0, 1, model->GetConstantBuffer().GetAddressOf());
 
-	model->cb.world = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(angle)* DirectX::XMMatrixTranslation(x, z, 0));
+	model->cb.world = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(angleY) * DirectX::XMMatrixRotationX(angleX) * DirectX::XMMatrixTranslation(x, y, z));
 	model->cb.view = DirectX::XMMatrixTranspose(camera->GetViewMatrix());
 	model->cb.projection = DirectX::XMMatrixTranspose(camera->GetProjectionMatrix());
 

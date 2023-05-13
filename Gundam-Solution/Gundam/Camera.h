@@ -8,7 +8,7 @@ class Camera
 {
 public:
 	void Initialize(const uint32_t Width, const uint32_t Height, class Window* window) noexcept;
-	void OnUpdate(const float deltaTime) noexcept;
+	void OnUpdate(const float deltaTime, float x, float y, float z) noexcept;
 
 	DirectX::XMMATRIX GetViewMatrix() const noexcept;
 	DirectX::XMMATRIX GetProjectionMatrix() const noexcept;
