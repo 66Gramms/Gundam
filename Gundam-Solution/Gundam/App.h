@@ -8,7 +8,7 @@ public:
 	App();
 	int Start();
 private:
-	void Update();
+	void Update(float seconds);
 
 	Window window;
 	GundamTimer timer;
@@ -16,4 +16,5 @@ private:
 	class ID3D11Device* pDevice;
 	std::vector<class Model*> models;
 	class Camera* camera;
+	float prev_seconds = -1.f;
 };

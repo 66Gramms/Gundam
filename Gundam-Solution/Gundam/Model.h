@@ -44,6 +44,7 @@ public:
 		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX projection;
+		float			  time;
 	}ConstantBuffer;
 	ConstantBuffer cb = {};
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;

@@ -3,6 +3,8 @@ cbuffer CBuf : register(b0)
 	matrix world;
 	matrix view;
 	matrix projection;
+	float time;
+
 };
 
 float4 main(float3 pos : POSITION) :SV_Position
